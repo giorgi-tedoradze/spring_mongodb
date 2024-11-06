@@ -1,59 +1,86 @@
 
 package com.example.demo;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/demo/posts")
 public class PostControler {
-    private final PostRepozitori repozitori;
+    private final PostRepository repozitori;
     private final JsonPlaceHolder cliebt;
     private final List<Author> authors;
-    public PostControler(PostRepozitori repozitori, JsonPlaceHolder cliebt) {
+
+    public PostControler(PostRepository repozitori, JsonPlaceHolder cliebt) {
         this.repozitori = repozitori;
         this.cliebt = cliebt;
         this.authors = cliebt.getAllAuthors();
 
     }
-    /*public void testauthors(){
-        if(authors != null){
-            System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n AAAAAAAAAAAAAAAWEq"+authors);
-        }
-    }*/
+
     @GetMapping("/")
-    private List<Post>findAll() {
+    private List<Post> findAll() {
         return repozitori.findAll();
     }
 
+    @GetMapping("/id/{id}")
+    Optional<Post> findById(@PathVariable String id) {
+        return repozitori.findById(id);
+    }
 
-
-    @GetMapping("/test")// damasrule!!!!!
-    public List<Post>init() {
+    @PostMapping("/test")
+    public List<Post> init() {
         List<Post> posts = cliebt.getAllPosts();
-        for (Post post : posts) {
+
+        // Используем обычный цикл for с индексом
+        for(Post post: posts){
             post.setAuthors(authors);
         }
 
+        // Сохраняем все посты в репозитории
         repozitori.saveAll(posts);
-        if (posts==null || posts.isEmpty()) {
-            System.out.println("No posts found");
-        }
 
+        // Возвращаем список постов
         return posts;
 
     }
 
+    @PostMapping("/add")
+    public Post addPost(@RequestBody Post post){
+        return repozitori.save(post);
+    }
 
-    @DeleteMapping("deleteAll")
+    @PutMapping("/put/post/{id}/{newPost}")
+    public Post put(@PathVariable String id, @RequestBody Post newPost){
+        Post post=repozitori.findById(id).orElse(null);
+        if(post==null){
+            return null;
+        }
+        post=newPost;
+        return repozitori.save(post);
+    }
+
+    @PutMapping("/put/body/{id}/{body}")
+    public Post put(@PathVariable String id, @PathVariable String body){
+        Post post=repozitori.findById(id).orElse(null);
+        if(post==null){
+            return null;
+        }
+        post.setBody(body);
+
+        return repozitori.save(post);
+    }
+
+    @DeleteMapping("/deleteAll")
     public void deleteAll() {
         repozitori.deleteAll();
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteById(@PathVariable String id){
+        repozitori.deleteById(id);
     }
 
 }
