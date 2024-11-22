@@ -1,5 +1,5 @@
 
-package com.example.demo;
+package com.example.demo.subject;
 import lombok.Data;
 import lombok.Builder;
 @Data
