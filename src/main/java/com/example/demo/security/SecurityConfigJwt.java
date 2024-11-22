@@ -22,7 +22,7 @@ public class SecurityConfigJwt {
         http
                 .csrf(AbstractHttpConfigurer::disable) // Отключение CSRF
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/demo/jwt/login", "/demo/jwt/register").permitAll() // Доступ к /auth/login и /auth/register для всех
+                        .requestMatchers("/demo/jwt/login", "/demo/jwt/register","/demo/").permitAll() // Доступ к /auth/login и /auth/register для всех
                         .anyRequest()
                         .authenticated() // Все остальные запросы требуют аутентификации
                 )

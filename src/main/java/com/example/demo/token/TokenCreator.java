@@ -4,11 +4,12 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
 
 public interface TokenCreator {
-    String getSecretKey();
-    default long expirationDay(){return 1;};
+    SecretKey getSecretKey();
+    default long expirationDay(){return 1;}
 
     default String getToken(String name) {
         long daysInMs = (long) 1000 * 60 * 60 * 24 * expirationDay();
@@ -17,13 +18,14 @@ public interface TokenCreator {
                 .setSubject(name)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + daysInMs))
-                .signWith(SignatureAlgorithm.HS256, getSecretKey())
+                .signWith(getSecretKey(),SignatureAlgorithm.HS256)
                 .compact();
     }
 
     default Claims extractClaims(String token) {
-        return Jwts.parser()
+        return Jwts.parserBuilder()
                 .setSigningKey(getSecretKey())
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
     }

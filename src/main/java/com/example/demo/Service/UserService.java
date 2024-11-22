@@ -4,17 +4,18 @@ import com.example.demo.*;
 import com.example.demo.reoisitory.UserRepository;
 import com.example.demo.subject.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService
 {
-    @Autowired
-    private UserRepository userRepository;
 
+    private final UserRepository userRepository;
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    UserService(UserRepository userRepository){
+        this.userRepository = userRepository;
+    }
+
 
     public void register(AuthenticationRequest request) {
         User user = new User();
@@ -26,7 +27,7 @@ public class UserService
     }
 
     public boolean login(AuthenticationRequest request) {
-        User user = userRepository.findByUsername(request.getUsername());
+        User user =userRepository.findByUsername(request.getUsername());
         if (user != null && request.getPassword().equals(user.getPassword())) {
             return true;
         }

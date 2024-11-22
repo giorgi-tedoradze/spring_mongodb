@@ -2,12 +2,20 @@ package com.example.demo.token;
 
 import org.springframework.stereotype.Component;
 
+import io.jsonwebtoken.security.Keys;
+
+import javax.crypto.SecretKey;
+
+
 @Component
 public class AccessToken implements TokenCreator {
+
     @Override
-    public String getSecretKey() {
-        return "gbidonswr43423234234edfgdfgdfgdfgdfgdfgdfgdfgfe";
+    public SecretKey getSecretKey() {
+        String  secretKey="gbidonswr43423234234edfgdfgdfgdfgdfgdfgdfgdfgfe";
+        return Keys.hmacShaKeyFor(secretKey.getBytes());
     }
+
 
     @Override
     public long expirationDay() {

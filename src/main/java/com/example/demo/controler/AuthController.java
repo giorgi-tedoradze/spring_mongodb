@@ -8,19 +8,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/demo/jwt")
+@RequestMapping("/demo")
 public class AuthController {
+    private final UserService userService;
+    private final TokenDriver tokenDriver;
     @Autowired
-    private UserService userService;
-    @Autowired
-    private TokenDriver tokenDriver;
+    AuthController (TokenDriver tokenDriver, UserService userService) {
+        this.tokenDriver = tokenDriver;
+        this.userService = userService;
+    }
 
-    @PostMapping("/register")
+    @GetMapping("/")
+    public ResponseEntity<String> test(){
+        try {
+            return ResponseEntity.ok("მუშაობს");
+        }catch (Exception e){
+            return  ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @PostMapping("/jwt/register")
     public ResponseEntity<?> register(@RequestBody AuthenticationRequest request) {
         userService.register(request);
         TokenCreator refreshToken;
@@ -38,16 +50,19 @@ public class AuthController {
 
     }
 
-    @PostMapping("/login")
+    @PostMapping("/jwt/login")
     public ResponseEntity<?> login(@RequestBody AuthenticationRequest request) {
-        userService.login(request);
+
         TokenCreator refreshToken;
         TokenCreator accessToken;
         try {
-            refreshToken=tokenDriver.getTokenCreatorByType(TokenType.JWT_REFRESH_TOKEN);
-            accessToken=tokenDriver.getTokenCreatorByType(TokenType.JWT_ACCESS_TOKEN);
-            return new ResponseEntity<>(new AuthenticationResponse(accessToken.getToken(request.getUsername()),refreshToken.getToken(request.getUsername()))
-                     ,HttpStatus.OK);
+            if(userService.login(request)) {
+                refreshToken = tokenDriver.getTokenCreatorByType(TokenType.JWT_REFRESH_TOKEN);
+                accessToken = tokenDriver.getTokenCreatorByType(TokenType.JWT_ACCESS_TOKEN);
+                return new ResponseEntity<>(new AuthenticationResponse(accessToken.getToken(request.getUsername()), refreshToken.getToken(request.getUsername()))
+                        , HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (TokenDriver.TokenTypeNotFoundException e) {
             throw new RuntimeException(e);
         }
