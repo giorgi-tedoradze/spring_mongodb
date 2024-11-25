@@ -8,7 +8,7 @@ import javax.crypto.SecretKey;
 
 
 @Component
-public class AccessToken implements TokenCreator {
+public class AccessToken extends TokenCreator {
 
     @Override
     public SecretKey getSecretKey() {

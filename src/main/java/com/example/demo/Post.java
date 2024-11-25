@@ -1,7 +1,7 @@
 
 package com.example.demo;
 
-import com.example.demo.subject.Author;
+import com.example.demo.model.Author;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;

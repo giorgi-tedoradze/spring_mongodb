@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 
 @Component
-public class RefreshToken implements TokenCreator {
+public class RefreshToken extends TokenCreator {
 
     @Override
     public SecretKey getSecretKey() {

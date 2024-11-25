@@ -4,10 +4,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class TokenDriver {
-    private final AccessToken accessToken;
-    private final RefreshToken refreshToken;
+    private final TokenCreator accessToken;
+    private final TokenCreator refreshToken;
 
-    public TokenDriver(AccessToken accessToken, RefreshToken refreshToken) {
+    public TokenDriver(TokenCreator accessToken, TokenCreator refreshToken) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
