@@ -22,10 +22,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
-    @Autowired
-    private TokenRequestFilter tokenRequestFilter;
-    @Autowired
-    private UserService userService;
+    private final TokenRequestFilter tokenRequestFilter;
+    private final UserService userService;
+
+    public SecurityConfiguration(TokenRequestFilter tokenRequestFilter, UserService userService) {
+        this.tokenRequestFilter = tokenRequestFilter;
+        this.userService = userService;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

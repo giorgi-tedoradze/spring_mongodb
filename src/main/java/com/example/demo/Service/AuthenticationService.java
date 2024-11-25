@@ -70,7 +70,7 @@ public class AuthenticationService {
             TokenCreator accessToken = tokenDriver.getTokenCreatorByType(TokenType.JWT_ACCESS_TOKEN);
             TokenCreator refreshToken = tokenDriver.getTokenCreatorByType(TokenType.JWT_REFRESH_TOKEN);
 
-            return new AuthenticationResponse(accessToken.getToken(userName), refreshToken.getToken(userName));
+            return new AuthenticationResponse(accessToken.createToken(userName), refreshToken.createToken(userName));
         } catch (TokenDriver.TokenTypeNotFoundException e) {
             throw new RuntimeException(e);
         }

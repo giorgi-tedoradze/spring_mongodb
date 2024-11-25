@@ -14,11 +14,11 @@ public abstract class TokenCreator {
         return 1;
     }
 
-    public String getToken(String name) {
+    public String createToken(String username) {
         long daysInMs = (long) 1000 * 60 * 60 * 24 * expirationDay();
 
         return Jwts.builder()
-                .setSubject(name)
+                .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + daysInMs))
                 .signWith(getSecretKey(), SignatureAlgorithm.HS256)
@@ -39,7 +39,8 @@ public abstract class TokenCreator {
                 .before(new Date());
     }
 
-    public String extractSubject(String token) {
-        return extractClaims(token).getSubject();
+    public String extractUsername(String token) {
+        return extractClaims(token)
+                .getSubject();
     }
 }
