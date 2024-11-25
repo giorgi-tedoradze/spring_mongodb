@@ -1,9 +1,8 @@
 package com.example.demo.security;
 
-
 import com.example.demo.database.service.UserService;
 import com.example.demo.filter.TokenRequestFilter;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,14 +20,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@AllArgsConstructor
 public class SecurityConfiguration {
     private final TokenRequestFilter tokenRequestFilter;
     private final UserService userService;
-
-    public SecurityConfiguration(TokenRequestFilter tokenRequestFilter, UserService userService) {
-        this.tokenRequestFilter = tokenRequestFilter;
-        this.userService = userService;
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -47,7 +42,7 @@ public class SecurityConfiguration {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> userService.loadUserByUsername(username);
+        return userService;
     }
 
     @Bean

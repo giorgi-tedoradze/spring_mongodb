@@ -1,16 +1,13 @@
 package com.example.demo.token;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class TokenDriver {
     private final TokenCreator accessToken;
     private final TokenCreator refreshToken;
-
-    public TokenDriver(TokenCreator accessToken, TokenCreator refreshToken) {
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
-    }
 
     public TokenCreator getTokenCreatorByType(TokenType type) throws TokenTypeNotFoundException {
         switch (type) {

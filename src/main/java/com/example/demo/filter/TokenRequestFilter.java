@@ -8,6 +8,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,21 +21,21 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
+@AllArgsConstructor
 public class TokenRequestFilter extends OncePerRequestFilter {
+    private static final int BEARER_SUBSTRING_LENGTH = 7;
+    private static final String IGNORABLE_PREFFIX = "/user";
+
     private final TokenDriver tokenDriver;
     private final UserService userService;
-
-    public TokenRequestFilter(TokenDriver tokenDriver, UserService userService) {
-        this.tokenDriver = tokenDriver;
-        this.userService = userService;
-    }
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain chain) throws ServletException, IOException {
         String requestURI = request.getRequestURI();
-        if (requestURI.startsWith("/user")) {
+
+        if (requestURI.startsWith(IGNORABLE_PREFFIX)) {
             chain.doFilter(request, response);
             return;
         }
@@ -42,13 +43,11 @@ public class TokenRequestFilter extends OncePerRequestFilter {
         String header = request.getHeader("Authorization");
 
         if (!StringUtils.hasLength(header) || !header.startsWith("Bearer ")) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setContentType("application/json");
-            response.getWriter().write("{\"error\": \"" + "Authorization header is incorrect" + "\"}");
+            setUnauthorizedResponse(response, "Authorization header is incorrect");
             return;
         }
 
-        String token = header.substring(7);
+        String token = header.substring(BEARER_SUBSTRING_LENGTH);
         TokenCreator tokenCreator = getAccessToken();
 
         String username = tokenCreator.extractUsername(token);
@@ -57,9 +56,7 @@ public class TokenRequestFilter extends OncePerRequestFilter {
             UserDetails userDetails = this.userService.loadUserByUsername(username);
 
             if (tokenCreator.isTokenExpired(token)) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.setContentType("application/json");
-                response.getWriter().write("{\"error\": \"" + "Token expired" + "\"}");
+                setUnauthorizedResponse(response, "Token expired");
                 return;
             }
 
@@ -76,6 +73,12 @@ public class TokenRequestFilter extends OncePerRequestFilter {
         }
 
         chain.doFilter(request, response);
+    }
+
+    private void setUnauthorizedResponse(HttpServletResponse response, String x) throws IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        response.getWriter().write("{\"error\": \"" + x + "\"}");
     }
 
     private TokenCreator getAccessToken() {

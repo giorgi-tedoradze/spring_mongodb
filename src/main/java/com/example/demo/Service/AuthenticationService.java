@@ -36,7 +36,7 @@ public class AuthenticationService {
         User user = new User();
 
         if (userService.findByUsername(request.getUsername()).isPresent()) {
-            throw new UserException("ასეთი მომხმარებელი უკვე არის");
+            throw new UserException("Username is already in use");
         }
 
         user.setUsername(request.getUsername());
@@ -59,7 +59,7 @@ public class AuthenticationService {
         Optional<User> user = userService.findByUsername(username);
 
         if (user.isEmpty()) {
-            throw new UsernameNotFoundException("არა სწორი მომხმარებლის სახელი");
+            throw new UsernameNotFoundException("User with this username does not exist");
         }
 
         return createAuthenticationResponse(username);
