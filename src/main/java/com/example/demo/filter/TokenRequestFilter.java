@@ -24,7 +24,7 @@ import java.io.IOException;
 @AllArgsConstructor
 public class TokenRequestFilter extends OncePerRequestFilter {
     private static final int BEARER_SUBSTRING_LENGTH = 7;
-    private static final String IGNORABLE_PREFFIX = "/user";
+    private static final String IGNORABLE_PREFFIX = "/freeWay";
 
     private final TokenDriver tokenDriver;
     private final UserService userService;
@@ -50,7 +50,7 @@ public class TokenRequestFilter extends OncePerRequestFilter {
         String token = header.substring(BEARER_SUBSTRING_LENGTH);
         TokenCreator tokenCreator = getAccessToken();
 
-        String username = tokenCreator.extractUsername(token);
+        String username = tokenCreator.extractClaims(token).getSubject();
 
         if (StringUtils.hasLength(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userService.loadUserByUsername(username);

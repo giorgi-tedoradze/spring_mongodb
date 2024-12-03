@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-@AllArgsConstructor
+@AllArgsConstructor //>>?? ეს აქ რისთვის?
 public class ExceptionController {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorMessageResponse> badCredentialsException(BadCredentialsException e) {

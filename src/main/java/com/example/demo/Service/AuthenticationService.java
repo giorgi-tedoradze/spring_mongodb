@@ -3,10 +3,7 @@ package com.example.demo.Service;
 import com.example.demo.database.model.User;
 import com.example.demo.database.service.UserService;
 import com.example.demo.exception.UserException;
-import com.example.demo.model.AuthenticationResponse;
-import com.example.demo.model.LoginAuthenticationRequest;
-import com.example.demo.model.RegistrationAuthenticationRequest;
-import com.example.demo.model.Role;
+import com.example.demo.model.*;
 import com.example.demo.token.TokenCreator;
 import com.example.demo.token.TokenDriver;
 import com.example.demo.token.TokenType;
@@ -27,7 +24,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
-    public void register(RegistrationAuthenticationRequest request) {
+    public void register(RegistrationAuthenticationRequest request,Role role) {
         User user = new User();
 
         if (userService.findByUsername(request.getUsername()).isPresent()) {
@@ -37,12 +34,20 @@ public class AuthenticationService {
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(Role.USER);
+        user.setRole(role);
 
         userService.save(user);
     }
 
-    public AuthenticationResponse login(LoginAuthenticationRequest request) {
+    public void registerUser(RegistrationAuthenticationRequest request) {
+        register(request,Role.USER);
+    }
+
+    public void registerAdmin(RegistrationAuthenticationRequest request) {
+        register(request,Role.ADMIN);
+    }
+
+    public AuthenticationResponse login(LoginAuthenticationRequest request){
         String username = request.getUsername();
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -57,15 +62,20 @@ public class AuthenticationService {
             throw new UsernameNotFoundException("User with this username does not exist");
         }
 
-        return createAuthenticationResponse(username);
+        return createAuthenticationResponse(new TokenAuthenticationData(user.get()));
     }
 
-    public AuthenticationResponse createAuthenticationResponse(String userName) {
-        try {
+
+
+
+
+    public AuthenticationResponse createAuthenticationResponse(TokenAuthenticationData tokenAuthenticationData) {
+        try{
             TokenCreator accessToken = tokenDriver.getTokenCreatorByType(TokenType.JWT_ACCESS_TOKEN);
             TokenCreator refreshToken = tokenDriver.getTokenCreatorByType(TokenType.JWT_REFRESH_TOKEN);
 
-            return new AuthenticationResponse(accessToken.createToken(userName), refreshToken.createToken(userName));
+            return new AuthenticationResponse(accessToken.createToken(tokenAuthenticationData),
+                    refreshToken.createToken(tokenAuthenticationData));
         } catch (TokenDriver.TokenTypeNotFoundException e) {
             throw new RuntimeException(e);
         }
