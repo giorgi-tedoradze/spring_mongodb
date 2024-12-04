@@ -53,6 +53,7 @@ public class TokenRequestFilter extends OncePerRequestFilter {
         String username = tokenCreator.extractUsername(token);
 
         if (StringUtils.hasLength(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
+           // System.out.println("!!!");
             UserDetails userDetails = this.userService.loadUserByUsername(username);
 
             if (tokenCreator.isTokenExpired(token)) {
@@ -64,6 +65,7 @@ public class TokenRequestFilter extends OncePerRequestFilter {
                     userDetails,
                     null,
                     userDetails.getAuthorities()
+
             );
 
             authToken.setDetails(

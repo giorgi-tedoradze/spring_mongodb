@@ -20,10 +20,10 @@ import java.util.List;
 public class TestController {
     @Autowired
     private TokenDriver td;
-    @GetMapping(value = "/test")
+    @GetMapping(value = "/role")
     public ResponseEntity<String> test(Principal principal) {
         try {
-            return ResponseEntity.ok("works " + principal.getName());
+            return ResponseEntity.ok(  principal.toString());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
