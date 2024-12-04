@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(value = "/freeWay")
+@RequestMapping(value = "/test")
 public class TestController {
     @Autowired
     private TokenDriver td;
