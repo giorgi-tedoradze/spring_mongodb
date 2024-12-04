@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("right/")
 public class Rightscontroler {
 
-    @PreAuthorize("hasRole('USER')")
-    @GetMapping("/user")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/user/login")
     public ResponseEntity<?> getUser() {
         return new ResponseEntity<>("User content", HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/admin")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/admin/login")
     public ResponseEntity<?> getAdmin() {
         return new ResponseEntity<>("Admin content", HttpStatus.OK);
     }

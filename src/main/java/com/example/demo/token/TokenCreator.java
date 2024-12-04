@@ -25,7 +25,7 @@ public abstract class TokenCreator {
 
         return Jwts.builder()
                 .setSubject(tokenAuthenticationData.getUsername())
-                .claim("roles", tokenAuthenticationData.getRole().name())
+                .claim("roles","ROLE_"+tokenAuthenticationData.getRole().name())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + daysInMs))
                 .signWith(getSecretKey(), SignatureAlgorithm.HS256)
@@ -40,17 +40,16 @@ public abstract class TokenCreator {
                 .getBody();
     }
 
-    public List<String> extractRoles(String token) {
+    public Collection<? extends GrantedAuthority> extractRoles(String token) {
         List<?> roles = extractClaims(token).get("roles", List.class);
+
+
         return roles.stream()
                 .filter(role -> role instanceof String)
-                .map(role -> (String) role)
+                .map(role -> new SimpleGrantedAuthority((String) role))
                 .collect(Collectors.toList());
     }
 
-    public Collection<? extends GrantedAuthority> extractRole(String toke) {
-        return List.of(new SimpleGrantedAuthority(extractRoles(toke).get(0)));
-    }
 
     public boolean isTokenExpired(String token) {
         return extractClaims(token)

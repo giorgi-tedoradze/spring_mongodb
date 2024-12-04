@@ -22,7 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
-@EnableMethodSecurity(securedEnabled = true) // Enabling method-level security
+//@EnableMethodSecurity(securedEnabled = true) // Enabling method-level security
 public class SecurityConfiguration {
     private final TokenRequestFilter tokenRequestFilter;
     private final UserService userService;
@@ -30,13 +30,15 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable) // Отключение CSRF
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/freeWay/**").permitAll()
+                        .requestMatchers("/right/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/right/user/**").hasRole("USER")
                         .anyRequest()
-                        .authenticated()// Все остальные запросы требуют аутентификации
+                        .authenticated()
                 )
-                .addFilterBefore(tokenRequestFilter, UsernamePasswordAuthenticationFilter.class)// Добавляем JwtRequestFilter перед UsernamePasswordAuthenticationFilter
+                .addFilterBefore(tokenRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .authenticationProvider(authenticationProvider());
 
         return http.build();

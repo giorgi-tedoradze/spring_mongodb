@@ -50,10 +50,10 @@ public class TokenRequestFilter extends OncePerRequestFilter {
         String token = header.substring(BEARER_SUBSTRING_LENGTH);
         TokenCreator tokenCreator = getAccessToken();
 
-        String username = tokenCreator.extractClaims(token).getSubject();
+        String username = tokenCreator.extractUsername(token);
 
         if (StringUtils.hasLength(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userService.loadUserByUsername(username);
+            UserDetails userDetails = userService.loadUserByUsername(username);
 
             if (tokenCreator.isTokenExpired(token)) {
                 setUnauthorizedResponse(response, "Token expired");
