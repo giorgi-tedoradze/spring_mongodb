@@ -11,6 +11,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class TokenAuthenticationData {
     String username;
+
+    // oo გიო ახალა იყოს მაგრამ თუ მოგინდება რომ 1 მომხმარებელს ქონდეს ბევრი როლი
+    //შენ ეს შესაცლელი გაქ!!
     Role role;
 
     public TokenAuthenticationData(User user) {

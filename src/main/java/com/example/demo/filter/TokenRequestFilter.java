@@ -4,30 +4,41 @@ import com.example.demo.database.service.UserService;
 import com.example.demo.token.TokenCreator;
 import com.example.demo.token.TokenDriver;
 import com.example.demo.token.TokenType;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
 public class TokenRequestFilter extends OncePerRequestFilter {
+    private final TokenDriver tokenDriver;
+    private final UserService userService;
+    private final UserSession userSession;
+
+
     private static final int BEARER_SUBSTRING_LENGTH = 7;
     private static final String IGNORABLE_PREFFIX = "/freeWay";
 
-    private final TokenDriver tokenDriver;
-    private final UserService userService;
+
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
@@ -39,6 +50,20 @@ public class TokenRequestFilter extends OncePerRequestFilter {
             chain.doFilter(request, response);
             return;
         }
+
+        if(userSession != null && userSession.getRoles()!=null ) {
+            String username=userSession.getUsername();
+            List<SimpleGrantedAuthority> authorities=userSession.getRoles().stream()
+                    .map(SimpleGrantedAuthority::new)
+                    .toList();
+            System.out.println("sesiam imushava saxo gio");
+            UsernamePasswordAuthenticationToken authentication=
+                    new UsernamePasswordAuthenticationToken(username,
+                            null,authorities);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            chain.doFilter(request,response);
+        }
+
 
         String header = request.getHeader("Authorization");
 
@@ -55,6 +80,7 @@ public class TokenRequestFilter extends OncePerRequestFilter {
         if (StringUtils.hasLength(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
            // System.out.println("!!!");
             UserDetails userDetails = this.userService.loadUserByUsername(username);
+
 
             if (tokenCreator.isTokenExpired(token)) {
                 setUnauthorizedResponse(response, "Token expired");
@@ -77,6 +103,8 @@ public class TokenRequestFilter extends OncePerRequestFilter {
 
         chain.doFilter(request, response);
     }
+
+
 
     private void setUnauthorizedResponse(HttpServletResponse response, String x) throws IOException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

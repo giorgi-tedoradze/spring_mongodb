@@ -29,8 +29,6 @@ public class UserController {
                 HttpStatus.ACCEPTED);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody LoginAuthenticationRequest loginAuthenticationRequest) {
-        return new ResponseEntity<>(authenticationService.login(loginAuthenticationRequest), HttpStatus.OK);
-    }
+
+
 }

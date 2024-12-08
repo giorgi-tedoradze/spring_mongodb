@@ -33,6 +33,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+        <!--ამა თუ რამე დაუკვირდი -->
+        <dependency>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session-data-mongodb</artifactId>
+        </dependency>
 
 
         <!-- JWT library for token handling -->

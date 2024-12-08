@@ -20,6 +20,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.session.data.mongo.JacksonMongoSessionConverter;
+
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
@@ -68,5 +70,12 @@ public class SecurityConfiguration {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+/// ამის საშვალებით კლასი userSession როცელიც წარმოადგენ ყოველი მომხმარებლის სესიის ეკზემპლარს
+/// სერიალურიზაციას და დესერიულიცზაციის ჯაკსონ ფარმატში გადაყავს მონგოდბ ში შესანახად
+
+@Bean
+public JacksonMongoSessionConverter mongoSessionConverter() {
+    return new JacksonMongoSessionConverter();
+}
 
 }

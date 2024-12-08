@@ -50,6 +50,17 @@ public abstract class TokenCreator {
                 .collect(Collectors.toList());
     }
 
+    public List<String> extractRolesToString(String token) {
+        Object rolesObject = extractClaims(token).get("roles");
+        if (rolesObject instanceof List<?>) {
+            return ((List<?>) rolesObject).stream()
+                    .map(Object::toString)
+                    .collect(Collectors.toList());
+        }
+        throw new IllegalArgumentException("Invalid roles format");
+
+    }
+
 
     public boolean isTokenExpired(String token) {
         return extractClaims(token)
