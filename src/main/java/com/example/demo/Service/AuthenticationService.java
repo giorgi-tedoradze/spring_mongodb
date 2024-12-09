@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,7 +25,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
-    public void register(RegistrationAuthenticationRequest request,Role role) {
+    public void register(RegistrationAuthenticationRequest request,List<String> role) {
         User user = new User();
 
         if (userService.findByUsername(request.getUsername()).isPresent()) {
@@ -40,11 +41,11 @@ public class AuthenticationService {
     }
 
     public void registerUser(RegistrationAuthenticationRequest request) {
-        register(request,Role.USER);
+        register(request, List.of(Role.USER.name()));
     }
 
     public void registerAdmin(RegistrationAuthenticationRequest request) {
-        register(request,Role.ADMIN);
+        register(request,List.of(Role.ADMIN.name()));
     }
 
     public AuthenticationResponse login(LoginAuthenticationRequest request){

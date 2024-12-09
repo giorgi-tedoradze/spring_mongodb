@@ -6,22 +6,22 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
 public class TokenAuthenticationData {
     String username;
 
-    // oo გიო ახალა იყოს მაგრამ თუ მოგინდება რომ 1 მომხმარებელს ქონდეს ბევრი როლი
-    //შენ ეს შესაცლელი გაქ!!
-    Role role;
+    List<String> role;
 
     public TokenAuthenticationData(User user) {
         this.username = user.getUsername();
         this.role = user.getRole();
     }
 
-    public TokenAuthenticationData(String username, Role role) {
+    public TokenAuthenticationData(String username,  List<String> role ) {
         this.username = username;
         this.role = role;
     }

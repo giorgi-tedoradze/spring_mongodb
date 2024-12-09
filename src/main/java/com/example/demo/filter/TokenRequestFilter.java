@@ -11,21 +11,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
@@ -51,15 +46,18 @@ public class TokenRequestFilter extends OncePerRequestFilter {
             return;
         }
 
-        if(userSession != null && userSession.getRoles()!=null ) {
+        if(userSession != null && userSession.getUsername()!=null ) {
             String username=userSession.getUsername();
-            List<SimpleGrantedAuthority> authorities=userSession.getRoles().stream()
+            /*List<SimpleGrantedAuthority> authorities=userSession.getRoles().stream()
                     .map(SimpleGrantedAuthority::new)
-                    .toList();
-            System.out.println("sesiam imushava saxo gio");
+                    .toList();*/ //მერე დააბრუნე
+            System.out.println("\naxa doFilterInternal: username="+username);
+
+            UserDetails userDetails = this.userService.loadUserByUsername(username);
+            System.out.println("\n\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n"+"doFilterInternal::doFilterInternal:"+userDetails.getAuthorities());
             UsernamePasswordAuthenticationToken authentication=
-                    new UsernamePasswordAuthenticationToken(username,
-                            null,authorities);
+                    new UsernamePasswordAuthenticationToken(userDetails,
+                            null,userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
             chain.doFilter(request,response);
         }
@@ -80,7 +78,8 @@ public class TokenRequestFilter extends OncePerRequestFilter {
         if (StringUtils.hasLength(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
            // System.out.println("!!!");
             UserDetails userDetails = this.userService.loadUserByUsername(username);
-
+            userSession.setUsername(username);
+            userSession.setRoles(tokenCreator.extractRolesToString(token));
 
             if (tokenCreator.isTokenExpired(token)) {
                 setUnauthorizedResponse(response, "Token expired");

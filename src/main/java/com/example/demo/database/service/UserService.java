@@ -25,7 +25,15 @@ public class UserService implements UserDetailsService {
     }
 
     public Optional<User> findByUsername(String request) {
-        return repository.findByUsername(request);
+        Optional<User> user = repository.findByUsername(request);
+        if (user.isEmpty()) {
+            throw new UsernameNotFoundException("User with username " + request + " not found");
+        }
+        if(user.get().getRole()==null) {
+            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n"+"UserDetailsService:: findByUserna:me"+user.get().getRole());
+        }
+        return user;
+
     }
 
     public void save(User user) {

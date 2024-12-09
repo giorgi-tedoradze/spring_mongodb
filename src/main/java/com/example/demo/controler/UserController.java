@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/freeWay")
@@ -17,7 +19,7 @@ public class UserController {
     public ResponseEntity<AuthenticationResponse> registerUser(@RequestBody RegistrationAuthenticationRequest request) {
         authenticationService.registerUser(request);
         return new ResponseEntity<>(authenticationService.createAuthenticationResponse(new TokenAuthenticationData(request.getUsername(),
-                Role.USER)),
+                List.of(Role.USER.name()))),
                 HttpStatus.ACCEPTED);
     }
 
@@ -25,7 +27,7 @@ public class UserController {
     public ResponseEntity<AuthenticationResponse> registerAdmin(@RequestBody RegistrationAuthenticationRequest request) {
         authenticationService.registerAdmin(request);
         return new ResponseEntity<>(authenticationService.createAuthenticationResponse(new TokenAuthenticationData(request.getUsername(),
-                Role.ADMIN)),
+                List.of(Role.ADMIN.name()))),
                 HttpStatus.ACCEPTED);
     }
 

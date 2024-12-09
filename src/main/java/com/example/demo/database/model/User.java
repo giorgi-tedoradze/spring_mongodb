@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class User implements UserDetails {
     private String username;
     private String password;
     private String email;
-    private Role role;
+    private List<String> role;
 
     @Override
     public String getUsername() {
@@ -34,7 +35,14 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_"+role.name()));
+
+
+        List<SimpleGrantedAuthority> roles = role.stream()
+                .map(role->new SimpleGrantedAuthority((String)"ROLE_"+ role))
+                .toList();
+
+        return roles;
+
     }
 
     @Override

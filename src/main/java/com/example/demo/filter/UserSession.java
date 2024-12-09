@@ -15,7 +15,6 @@ import java.util.List;
 @Setter
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class") // Указывает, что при сериализации будет добавляться информация о классе
 public class UserSession {
-    private static final long serialVersionUID = 1L; // Рекомендуется добавить serialVersionUID
     private String username;
     List<String> roles;
 }
