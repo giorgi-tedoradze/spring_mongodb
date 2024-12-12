@@ -2,6 +2,7 @@ package com.example.demo.controler;
 
 import com.example.demo.model.*;
 import com.example.demo.Service.AuthenticationService;
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

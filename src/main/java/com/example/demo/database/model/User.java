@@ -36,12 +36,10 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
+        return role.stream()
 
-        List<SimpleGrantedAuthority> roles = role.stream()
-                .map(role->new SimpleGrantedAuthority((String)"ROLE_"+ role))
+                .map(role1 ->new SimpleGrantedAuthority((String)"ROLE_"+ role1))
                 .toList();
-
-        return roles;
 
     }
 

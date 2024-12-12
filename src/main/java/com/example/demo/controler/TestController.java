@@ -5,6 +5,7 @@ import com.example.demo.token.TokenDriver;
 import com.example.demo.token.TokenType;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(value = "/test")
+@RequestMapping("/test")
 public class TestController {
     @Autowired
     private TokenDriver td;
@@ -27,6 +28,10 @@ public class TestController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+    @GetMapping(value = "/vork")
+    public ResponseEntity<?> vork() {
+        return ResponseEntity.ok(HttpStatus.OK);
     }
    
 }

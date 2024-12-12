@@ -35,6 +35,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/freeWay/**").permitAll()
                         .requestMatchers("/right/admin/**").hasRole(Role.ADMIN.name())
                         .requestMatchers("/right/user/**").hasAnyRole(Role.USER.name(), Role.ADMIN.name())
+                        .requestMatchers("/test/**").hasRole(Role.USER.name())
                         .anyRequest()
                         .authenticated()
                 )

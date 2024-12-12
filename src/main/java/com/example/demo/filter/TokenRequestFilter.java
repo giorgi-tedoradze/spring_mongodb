@@ -9,6 +9,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,7 +29,7 @@ public class TokenRequestFilter extends OncePerRequestFilter {
     private final TokenDriver tokenDriver;
     private final UserService userService;
     private final UserSession userSession;
-
+    private HttpSession session;
 
     private static final int BEARER_SUBSTRING_LENGTH = 7;
     private static final String IGNORABLE_PREFFIX = "/freeWay";
@@ -46,23 +47,6 @@ public class TokenRequestFilter extends OncePerRequestFilter {
             return;
         }
 
-        if(userSession != null && userSession.getUsername()!=null ) {
-            String username=userSession.getUsername();
-            /*List<SimpleGrantedAuthority> authorities=userSession.getRoles().stream()
-                    .map(SimpleGrantedAuthority::new)
-                    .toList();*/ //მერე დააბრუნე
-            System.out.println("\naxa doFilterInternal: username="+username);
-
-            UserDetails userDetails = this.userService.loadUserByUsername(username);
-            System.out.println("\n\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n"+"doFilterInternal::doFilterInternal:"+userDetails.getAuthorities());
-            UsernamePasswordAuthenticationToken authentication=
-                    new UsernamePasswordAuthenticationToken(userDetails,
-                            null,userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            chain.doFilter(request,response);
-        }
-
-
         String header = request.getHeader("Authorization");
 
         if (!StringUtils.hasLength(header) || !header.startsWith("Bearer ")) {
@@ -73,14 +57,40 @@ public class TokenRequestFilter extends OncePerRequestFilter {
         String token = header.substring(BEARER_SUBSTRING_LENGTH);
         TokenCreator tokenCreator = getAccessToken();
 
-        String username = tokenCreator.extractUsername(token);
+        if(userSession != null && userSession.getUsername()!=null && userSession.getUsername().equals(tokenCreator.extractUsername(token))) {
+            String username=userSession.getUsername();
+            /*List<SimpleGrantedAuthority> authorities=userSession.getRoles().stream()
+                    .map(SimpleGrantedAuthority::new)
+                    .toList();*/ //მერე დააბრუნე
 
+            System.out.println("\naxa doFilterInternal session: username: username="+username);
+
+            UserDetails userDetails = this.userService.loadUserByUsername(username);
+            System.out.println("\n\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n"+"doFilterInternal::doFilterInternal:"+userDetails.getAuthorities());
+            UsernamePasswordAuthenticationToken authentication=
+                    new UsernamePasswordAuthenticationToken(userDetails,
+                            null,
+                            userDetails.getAuthorities());
+
+            authentication.setDetails(
+                    new WebAuthenticationDetailsSource().buildDetails(request)
+            );
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            System.out.println("SecurityContextHolder.getContext().getAuthentication():"+SecurityContextHolder.getContext().getAuthentication());
+
+            chain.doFilter(request,response);
+            return;
+        }
+
+        String username = tokenCreator.extractUsername(token);
         if (StringUtils.hasLength(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
            // System.out.println("!!!");
             UserDetails userDetails = this.userService.loadUserByUsername(username);
-            userSession.setUsername(username);
-            userSession.setRoles(tokenCreator.extractRolesToString(token));
-
+            if(userSession!=null) {
+                userSession.setUsername(username);
+                userSession.setRoles(tokenCreator.extractRolesToString(token));
+            }else{System.out.println("session is null ratom??");}
             if (tokenCreator.isTokenExpired(token)) {
                 setUnauthorizedResponse(response, "Token expired");
                 return;

@@ -6,9 +6,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class SessionService {
     HttpSession session;
+
     public SessionService(HttpSession session) {
         this.session = session;
     }
+
     public void saveSessionData(String key, Object value) {
        try {
            session.setAttribute(key, value);

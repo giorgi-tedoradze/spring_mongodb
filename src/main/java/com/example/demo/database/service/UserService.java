@@ -26,12 +26,14 @@ public class UserService implements UserDetailsService {
 
     public Optional<User> findByUsername(String request) {
         Optional<User> user = repository.findByUsername(request);
-        if (user.isEmpty()) {
+       /* if (user.isEmpty()) {
             throw new UsernameNotFoundException("User with username " + request + " not found");
-        }
-        if(user.get().getRole()==null) {
+        }რეგისტრაცია უბერავს ამის გამო რადგანაც თუ სახელი უკვე არის არ არეგისტრირებს თუ კი არ არის
+         ეს შემოწმება შეცდომას აგდებს და გამოდის რომ არანაირში არ რეგისტრილდება
+         ადგილზე ამოწმეთ!!!*/
+        /*if(user.get().getRole()==null) {
             System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n"+"UserDetailsService:: findByUserna:me"+user.get().getRole());
-        }
+        }*/
         return user;
 
     }
