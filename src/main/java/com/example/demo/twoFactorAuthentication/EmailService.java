@@ -23,6 +23,7 @@ public class EmailService {
         try{
             MimeMessageHelper helper=new MimeMessageHelper(message,true);
             helper.setSubject(subject);
+            helper.setFrom("demo1");
             helper.setTo(to);
             helper.setText(text,true);
             mailSender.send(message);

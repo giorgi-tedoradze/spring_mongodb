@@ -18,17 +18,19 @@ public class OptService {
 
     public boolean validateOpt(String email, String opt) {
         OptData optData = optStorage.get(email);
+        System.out.println("\noptData:"+optData.getOpt()+"\n opt:"+opt);
+
         if (optData == null || optData.isExpired()) {
             optStorage.remove(email);
+            System.out.println("\noptStorage: optData=null?!");
             return false;
         }
-
-        if (opt.equals(optData.getOpt())) {
+        boolean isValid = opt.equals(optData.getOpt());
+        if(isValid) {
             optStorage.remove(email);
-            return true;
-        } else {
-            return false;
         }
+        return isValid;
+
 
     }
 }
