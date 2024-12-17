@@ -1,4 +1,4 @@
-package com.example.demo.filter;
+package com.example.demo.session.sessionModel;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Getter;

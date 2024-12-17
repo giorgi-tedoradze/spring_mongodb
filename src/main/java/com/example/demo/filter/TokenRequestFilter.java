@@ -1,6 +1,7 @@
 package com.example.demo.filter;
 
 import com.example.demo.database.service.UserService;
+import com.example.demo.session.sessionModel.UserSession;
 import com.example.demo.token.TokenCreator;
 import com.example.demo.token.TokenDriver;
 import com.example.demo.token.TokenType;
@@ -9,7 +10,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,7 +29,7 @@ public class TokenRequestFilter extends OncePerRequestFilter {
     private final TokenDriver tokenDriver;
     private final UserService userService;
     private final UserSession userSession;
-    private HttpSession session;
+
 
     private static final int BEARER_SUBSTRING_LENGTH = 7;
     private static final String IGNORABLE_PREFFIX = "/freeWay";

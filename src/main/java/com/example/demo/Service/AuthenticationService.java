@@ -7,6 +7,8 @@ import com.example.demo.model.*;
 import com.example.demo.token.TokenCreator;
 import com.example.demo.token.TokenDriver;
 import com.example.demo.token.TokenType;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,8 +16,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.io.IOException;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -24,6 +26,7 @@ public class AuthenticationService {
     private final TokenDriver tokenDriver;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final Map<String,RegistrationAuthenticationRequest> UserRegistrationInformation   = new HashMap<>();
 
     public void register(RegistrationAuthenticationRequest request,List<String> role) {
         User user = new User();
@@ -46,6 +49,57 @@ public class AuthenticationService {
 
     public void registerAdmin(RegistrationAuthenticationRequest request) {
         register(request,List.of(Role.ADMIN.name()));
+    }
+
+    public void saveUserRegistrationInformation(
+            String key,
+            RegistrationAuthenticationRequest userRegistrationInformation
+    ){
+        UserRegistrationInformation.put(
+                key,
+                userRegistrationInformation
+        );
+    }
+
+    public void removeUserRegistrationInformation(String key){
+        UserRegistrationInformation.remove(key);
+
+    }
+
+    public void filingHttpHeader(HttpServletResponse response ,
+                       RegistrationAuthenticationRequest userRegistrationInformation ) {
+
+        String uniqueAuthKey= getUniqueAuthKey(userRegistrationInformation);
+
+        saveUserRegistrationInformation(
+                uniqueAuthKey,
+                userRegistrationInformation
+        );
+        System.out.println(UserRegistrationInformation);
+        response.setHeader("X-Unique-Auth-Key",uniqueAuthKey);
+       /* try {
+            response.sendRedirect("http://localhost:8080/freeWay/register/user");
+        }catch (IOException e) {
+            e.printStackTrace();
+        }*/
+    }
+
+    public RegistrationAuthenticationRequest extractHttpHeader(HttpServletRequest request){
+       String key= request.getHeader("X-Unique-Auth-Key");
+       RegistrationAuthenticationRequest registrationAuthenticationRequest= UserRegistrationInformation.get(key);
+       removeUserRegistrationInformation(key);
+       return registrationAuthenticationRequest;
+    }
+
+
+
+    public String getUniqueAuthKey(RegistrationAuthenticationRequest userRegistrationInformation){
+        long time = new Date().getTime();
+        return (
+                String.valueOf(time)
+                        +userRegistrationInformation.getEmail().hashCode()
+                        + userRegistrationInformation.getUsername().hashCode()
+        ).substring(0, String.valueOf(time).length() + 6);
     }
 
     public AuthenticationResponse login(LoginAuthenticationRequest request){
