@@ -26,45 +26,45 @@ public class UserController {
     private final OptService optService;
 
     @PostMapping("/register/user")
-    public ResponseEntity<AuthenticationResponse> registerUser(@RequestBody RegistrationAuthenticationRequest request) {
-        authenticationService.registerUser(request);
-        return new ResponseEntity<>(authenticationService.createAuthenticationResponse(new TokenAuthenticationData(request.getUsername(),
-                List.of(Role.USER.name()))),
+    public ResponseEntity<AuthenticationResponse> registerUser(@RequestParam(defaultValue="**")String opt,
+                                                               HttpServletRequest requestHttp) {
+        RegistrationAuthenticationRequest registrationAuthentication=
+                authenticationService.extractHttpHeader(requestHttp);
+
+        authenticationService.registerUser(registrationAuthentication,opt);
+        return new ResponseEntity<>(authenticationService.
+                createAuthenticationResponse(
+                        new TokenAuthenticationData(
+                                registrationAuthentication.getUsername(),
+                                List.of(Role.USER.name())
+                        )
+                ),
                 HttpStatus.ACCEPTED);
     }
 
-    @PostMapping("/register/user/mesije")
-    public ResponseEntity<?> sendcode(@RequestBody RegistrationAuthenticationRequest request,
+    @PostMapping("/register/primaryAuthentication")
+    public ResponseEntity<?> sendOpt(@RequestBody RegistrationAuthenticationRequest request,
                          HttpServletResponse response) {
-        emailService.sendEmail(
-                request.getEmail(),
-                "code",
-                optService.optGenerate(request.getEmail())
-        );
-        authenticationService.filingHttpHeader(response,request);
 
+        authenticationService.primaryAuthentication(response,request);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
 
     }
 
-    @PostMapping("/register/user/chekkod")
-    public ResponseEntity<?> chekkod(@RequestParam(defaultValue="**")String opt,
-                                     HttpServletRequest request){
-        RegistrationAuthenticationRequest registrationAuthenticationRequest= authenticationService.extractHttpHeader(request);
-        optService.validateOpt(registrationAuthenticationRequest.getEmail(), opt);
-
-        authenticationService.registerUser(registrationAuthenticationRequest);
-        return new ResponseEntity<>(authenticationService.createAuthenticationResponse(new TokenAuthenticationData(registrationAuthenticationRequest.getUsername(),
-                List.of(Role.USER.name()))),
-                HttpStatus.ACCEPTED);
-
-    }
-
     @PostMapping("/register/admin")
-    public ResponseEntity<AuthenticationResponse> registerAdmin(@RequestBody RegistrationAuthenticationRequest request) {
-        authenticationService.registerAdmin(request);
-        return new ResponseEntity<>(authenticationService.createAuthenticationResponse(new TokenAuthenticationData(request.getUsername(),
-                List.of(Role.ADMIN.name()))),
+    public ResponseEntity<AuthenticationResponse> registerAdmin(@RequestParam(defaultValue="**")String opt,
+                                                                HttpServletRequest requestHttp) {
+        RegistrationAuthenticationRequest registrationAuthentication=
+                authenticationService.extractHttpHeader(requestHttp);
+
+        authenticationService.registerAdmin(registrationAuthentication,opt);
+        return new ResponseEntity<>(authenticationService.
+                createAuthenticationResponse(
+                        new TokenAuthenticationData(
+                                registrationAuthentication.getUsername(),
+                                List.of(Role.ADMIN.name())
+                        )
+                ),
                 HttpStatus.ACCEPTED);
     }
 

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/right/user")
 public class RightsUserController {
 
-    @GetMapping("/login")
+    @GetMapping("login")
     public ResponseEntity<?> loginUser() {
         return new ResponseEntity<>("User content", HttpStatus.OK);
     }

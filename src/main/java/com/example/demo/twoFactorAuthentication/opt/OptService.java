@@ -16,8 +16,9 @@ public class OptService {
         return otp;
     }
 
-    public boolean validateOpt(String email, String opt) {
+    public boolean validateOpt(String opt, String  email) {
         OptData optData = optStorage.get(email);
+        System.out.println("\noptStorage:"+optStorage.toString());
         System.out.println("\noptData:"+optData.getOpt()+"\n opt:"+opt);
 
         if (optData == null || optData.isExpired()) {

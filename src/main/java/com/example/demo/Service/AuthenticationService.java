@@ -7,6 +7,8 @@ import com.example.demo.model.*;
 import com.example.demo.token.TokenCreator;
 import com.example.demo.token.TokenDriver;
 import com.example.demo.token.TokenType;
+import com.example.demo.twoFactorAuthentication.EmailService;
+import com.example.demo.twoFactorAuthentication.opt.OptService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -26,9 +28,14 @@ public class AuthenticationService {
     private final TokenDriver tokenDriver;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final EmailService emailService;
+    private final OptService optService;
     private final Map<String,RegistrationAuthenticationRequest> UserRegistrationInformation   = new HashMap<>();
 
-    public void register(RegistrationAuthenticationRequest request,List<String> role) {
+    public void register(RegistrationAuthenticationRequest request,List<String> role,String opt) {
+        if(!checkRequestOpt(opt,request.getEmail())){
+            throw new UserException("კოდი არ არის სწორი");
+        }
         User user = new User();
 
         if (userService.findByUsername(request.getUsername()).isPresent()) {
@@ -43,12 +50,12 @@ public class AuthenticationService {
         userService.save(user);
     }
 
-    public void registerUser(RegistrationAuthenticationRequest request) {
-        register(request, List.of(Role.USER.name()));
+    public void registerUser(RegistrationAuthenticationRequest request,String opt) {
+        register(request, List.of(Role.USER.name()),opt);
     }
 
-    public void registerAdmin(RegistrationAuthenticationRequest request) {
-        register(request,List.of(Role.ADMIN.name()));
+    public void registerAdmin(RegistrationAuthenticationRequest request,String opt) {
+        register(request,List.of(Role.ADMIN.name()),opt);
     }
 
     public void saveUserRegistrationInformation(
@@ -75,14 +82,27 @@ public class AuthenticationService {
                 uniqueAuthKey,
                 userRegistrationInformation
         );
-        System.out.println(UserRegistrationInformation);
         response.setHeader("X-Unique-Auth-Key",uniqueAuthKey);
-       /* try {
-            response.sendRedirect("http://localhost:8080/freeWay/register/user");
-        }catch (IOException e) {
-            e.printStackTrace();
-        }*/
+
     }
+
+
+    public void sendOptToEmail(String to,String opt){
+        emailService.sendEmail(to,"code",opt);
+    }
+
+    public void primaryAuthentication(HttpServletResponse response ,
+                                      RegistrationAuthenticationRequest userRegistrationInformation){
+        String to= userRegistrationInformation.getEmail();
+        String opt = optService.optGenerate(to);
+        sendOptToEmail(to,opt);
+        filingHttpHeader(response,userRegistrationInformation);
+    }
+
+    public boolean checkRequestOpt(String opt,String Email){
+        return optService.validateOpt(opt,Email);
+    }
+
 
     public RegistrationAuthenticationRequest extractHttpHeader(HttpServletRequest request){
        String key= request.getHeader("X-Unique-Auth-Key");
