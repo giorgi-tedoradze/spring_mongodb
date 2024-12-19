@@ -1,48 +1,55 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!-- Указывает на модель версии POM, используемую в проекте. -->
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- Определение родительского POM файла, в данном случае Spring Boot Starter Parent -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.3.5</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <!-- Пустой relativePath означает, что родительский POM ищется в репозитории. -->
+        <relativePath/>
     </parent>
 
+    <!-- Основная информация о проекте: groupId, artifactId и версия -->
     <groupId>com.example</groupId>
     <artifactId>spring-mongo-jwt</artifactId>
     <version>1.0.0</version>
 
     <dependencies>
+        <!-- Зависимость для Spring Web, необходима для разработки веб-приложений (REST API, контроллеры и т.д.) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!-- Зависимость для Spring Mail, если ваш проект будет работать с электронной почтой -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
+        <!-- Зависимость для Spring Data MongoDB, для работы с MongoDB -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
 
+        <!-- Зависимость для Spring Security, для обеспечения безопасности в приложении (аутентификация, авторизация и т.д.) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-        <!--ამა თუ რამე დაუკვირდი -->
+
+        <!-- Зависимость для Spring Session с поддержкой MongoDB, для управления сессиями пользователей -->
         <dependency>
             <groupId>org.springframework.session</groupId>
             <artifactId>spring-session-data-mongodb</artifactId>
         </dependency>
 
-
-
-
-        <!-- JWT library for token handling -->
+        <!-- Зависимость для библиотеки JWT для работы с токенами JSON Web Token -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
@@ -53,32 +60,58 @@
             <artifactId>jjwt-impl</artifactId>
             <version>0.11.2</version>
         </dependency>
+
+        <!-- Зависимость для SLF4J API, интерфейс для логирования -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.13</version>
+        </dependency>
+
+        <!-- Зависимость для Logback — популярная реализация SLF4J для логирования -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.5.6</version>
+        </dependency>
+
+        <!-- Зависимость для работы с Jackson в связке с JWT -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId>
             <version>0.11.2</version>
         </dependency>
 
+        <!-- Зависимость для Spring Cache, если ваш проект будет использовать кэширование -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+
+        <!-- Зависимость для Spring Security Crypto, для работы с криптографией и безопасностью паролей -->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-crypto</artifactId>
         </dependency>
 
+        <!-- Зависимость для тестирования, используется для юнит-тестов, интеграционных тестов и т.д. -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
+        <!-- Зависимость для Lombok, библиотека для упрощения кода (например, генерация геттеров/сеттеров) -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <scope>provided</scope>
+            <scope>provided</scope> <!-- Lombok используется только на этапе компиляции, не входит в финальный артефакт -->
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <!-- Плагин для Spring Boot, необходим для создания и запуска Spring Boot приложения -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

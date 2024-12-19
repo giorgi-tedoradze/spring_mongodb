@@ -1,5 +1,7 @@
 package com.example.demo.controler;
 
+import com.example.demo.Service.AuthenticationService;
+import com.example.demo.Service.UserRegistrationInformation;
 import com.example.demo.token.TokenCreator;
 import com.example.demo.token.TokenDriver;
 import com.example.demo.token.TokenType;
@@ -21,6 +23,8 @@ public class TestController {
     private TokenDriver td;
     private EmailService emailService;
     private OptService optService;
+    private AuthenticationService authenticationService;
+    private UserRegistrationInformation userRegistrationInformation;
 
     @GetMapping(value = "/role")
     public ResponseEntity<String> test(Principal principal) {
@@ -55,6 +59,10 @@ public class TestController {
            return ResponseEntity.ok(HttpStatus.OK);
        }
        return ResponseEntity.badRequest().body(opt);
+    }
+    @GetMapping("/chash")
+    public ResponseEntity<?> chash(@RequestParam String key) {
+        return ResponseEntity.ok(userRegistrationInformation.getUserRegistrationInformation(key));
     }
    
 }

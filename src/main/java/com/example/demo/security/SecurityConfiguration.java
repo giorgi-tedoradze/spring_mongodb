@@ -4,8 +4,10 @@ import com.example.demo.database.service.UserService;
 import com.example.demo.filter.TokenRequestFilter;
 import com.example.demo.model.Role;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -23,6 +25,8 @@ import org.springframework.session.data.mongo.JacksonMongoSessionConverter;
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
+@EnableCaching //კეშის ჩასართობათ
+
 public class SecurityConfiguration {
     private final TokenRequestFilter tokenRequestFilter;
     private final UserService userService;

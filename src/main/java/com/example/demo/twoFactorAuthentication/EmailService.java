@@ -7,7 +7,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import java.util.Random;
+
 
 @Service
 public class EmailService {
@@ -31,9 +31,6 @@ public class EmailService {
             throw new RuntimeException("ოოო რაღაცა მესიჯის შექმნამ დაუბერა:"+e);
         }
     }
-    private Integer random(){
-        Random random = new Random();
-        return  1000 + random.nextInt(9000);
-    }
+
 
 }

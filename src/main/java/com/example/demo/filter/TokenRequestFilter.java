@@ -87,10 +87,7 @@ public class TokenRequestFilter extends OncePerRequestFilter {
         if (StringUtils.hasLength(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
            // System.out.println("!!!");
             UserDetails userDetails = this.userService.loadUserByUsername(username);
-            if(userSession!=null) {
-                userSession.setUsername(username);
-                userSession.setRoles(tokenCreator.extractRolesToString(token));
-            }else{System.out.println("session is null ratom??");}
+
             if (tokenCreator.isTokenExpired(token)) {
                 setUnauthorizedResponse(response, "Token expired");
                 return;
@@ -108,6 +105,11 @@ public class TokenRequestFilter extends OncePerRequestFilter {
             );
 
             SecurityContextHolder.getContext().setAuthentication(authToken);
+
+            if(userSession!=null) {
+                userSession.setUsername(username);
+                userSession.setRoles(tokenCreator.extractRolesToString(token));
+            }else{System.out.println("session is null ratom??");}
         }
 
         chain.doFilter(request, response);

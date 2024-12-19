@@ -12,13 +12,14 @@ import com.example.demo.twoFactorAuthentication.opt.OptService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
+
 import java.util.*;
 
 @Service
@@ -30,7 +31,8 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final EmailService emailService;
     private final OptService optService;
-    private final Map<String,RegistrationAuthenticationRequest> UserRegistrationInformation   = new HashMap<>();
+
+    private UserRegistrationInformation userRegistrationInformation;
 
     public void register(RegistrationAuthenticationRequest request,List<String> role,String opt) {
         if(!checkRequestOpt(opt,request.getEmail())){
@@ -38,9 +40,6 @@ public class AuthenticationService {
         }
         User user = new User();
 
-        if (userService.findByUsername(request.getUsername()).isPresent()) {
-            throw new UserException("Username is already in use");
-        }
 
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
@@ -58,30 +57,14 @@ public class AuthenticationService {
         register(request,List.of(Role.ADMIN.name()),opt);
     }
 
-    public void saveUserRegistrationInformation(
-            String key,
-            RegistrationAuthenticationRequest userRegistrationInformation
-    ){
-        UserRegistrationInformation.put(
-                key,
-                userRegistrationInformation
-        );
-    }
-
-    public void removeUserRegistrationInformation(String key){
-        UserRegistrationInformation.remove(key);
-
-    }
-
     public void filingHttpHeader(HttpServletResponse response ,
                        RegistrationAuthenticationRequest userRegistrationInformation ) {
 
         String uniqueAuthKey= getUniqueAuthKey(userRegistrationInformation);
-
-        saveUserRegistrationInformation(
+        this.userRegistrationInformation.setUserRegistrationInformation(
                 uniqueAuthKey,
-                userRegistrationInformation
-        );
+                userRegistrationInformation);
+
         response.setHeader("X-Unique-Auth-Key",uniqueAuthKey);
 
     }
@@ -93,6 +76,10 @@ public class AuthenticationService {
 
     public void primaryAuthentication(HttpServletResponse response ,
                                       RegistrationAuthenticationRequest userRegistrationInformation){
+
+        if (userService.findByUsername(userRegistrationInformation.getUsername()).isPresent()) {
+            throw new UserException("Username is already in use");
+        }
         String to= userRegistrationInformation.getEmail();
         String opt = optService.optGenerate(to);
         sendOptToEmail(to,opt);
@@ -106,8 +93,9 @@ public class AuthenticationService {
 
     public RegistrationAuthenticationRequest extractHttpHeader(HttpServletRequest request){
        String key= request.getHeader("X-Unique-Auth-Key");
-       RegistrationAuthenticationRequest registrationAuthenticationRequest= UserRegistrationInformation.get(key);
-       removeUserRegistrationInformation(key);
+       RegistrationAuthenticationRequest registrationAuthenticationRequest=userRegistrationInformation.
+               getUserRegistrationInformation(key);
+        userRegistrationInformation.removeUserRegistrationInformation(key);
        return registrationAuthenticationRequest;
     }
 
