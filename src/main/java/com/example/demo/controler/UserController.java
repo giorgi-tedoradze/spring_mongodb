@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -66,7 +67,19 @@ public class UserController {
                         )
                 ),
                 HttpStatus.ACCEPTED);
+
+
+
+
     }
+
+    @GetMapping("/login")
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody LoginAuthenticationRequest loginAuthenticationRequest){
+        AuthenticationResponse response=authenticationService.login(loginAuthenticationRequest);
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+
 
 
 

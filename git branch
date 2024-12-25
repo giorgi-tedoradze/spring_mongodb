@@ -1,0 +1,143 @@
+[33mcommit 6010a955e14f4e54467886ba45248d850e8626fd[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mrabbitMQ[m[33m, [m[1;31mspring_mongodb/rabbitMQ[m[33m, [m[1;31mspring_mongodb/master[m[33m, [m[1;31mspring_mongodb/2F[m[33m)[m
+Author: giorgi <tedoradze2004@gmail.com>
+Date:   Thu Dec 19 18:19:53 2024 +0400
+
+    damtavrebulis sesia da 2F
+
+[33mcommit 8bae93f039374b43875b029b97b17b0933980e19[m
+Author: giorgi <tedoradze2004@gmail.com>
+Date:   Wed Dec 18 15:54:26 2024 +0400
+
+    damtavrebuli 2F registracia
+
+[33mcommit a29e38ac55fd5bc4ae719ce9f0e6aa0ec47f6a53[m
+Author: giorgi <tedoradze2004@gmail.com>
+Date:   Tue Dec 17 16:40:48 2024 +0400
+
+    momushave 2F magram mwared saWiroa restavracia
+
+[33mcommit 3d34d66b40d0ad854852f4b12120880ae66fb771[m
+Author: giorgi <tedoradze2004@gmail.com>
+Date:   Fri Dec 13 18:24:51 2024 +0400
+
+    dasrulebuli emailis da opt servisebi
+
+[33mcommit 7ea814a892e351630c35c17a0fde573c8e2eaa8b[m
+Author: giorgi <tedoradze2004@gmail.com>
+Date:   Thu Dec 12 18:14:31 2024 +0400
+
+    gamosworebuli sesiebi
+
+[33mcommit 9d26a8d9febf51808fba272131c1fc4c7402e31d[m
+Author: giorgi <tedoradze2004@gmail.com>
+Date:   Mon Dec 9 16:56:11 2024 +0400
+
+    rolebis siashi moqceva magram bazidan viRebT
+
+[33mcommit ee9d497d4ecdd89347c9d38da6e073e232bbabb9[m
+Author: giorgi <tedoradze2004@gmail.com>
+Date:   Sun Dec 8 22:41:10 2024 +0400
+
+    filtri darcha matro
+
+[33mcommit 028a82d5689ed72674c615cca9bf2fb1370ba961[m
+Author: giorgi <tedoradze2004@gmail.com>
+Date:   Thu Dec 5 18:34:44 2024 +0400
+
+    mailService da ertjeradi kodi
+
+[33mcommit 97a55ab16a1e8d5554b384c1871c5b4a70c01461[m[33m ([m[1;31mspring_mongodb/refactor[m[33m)[m
+Author: giorgi <tedoradze2004@gmail.com>
+Date:   Wed Dec 4 17:37:21 2024 +0400
+
+    damtavrda
+
+[33mcommit 4e8bad16c26aa8d365b3aa76f1b37ee27873bedd[m
+Author: giorgi <tedoradze2004@gmail.com>
+Date:   Wed Dec 4 16:47:44 2024 +0400
+
+    roles fix
+
+[33mcommit 644dbdd122a1736a5fd23ec3d462bbe026856bce[m
+Author: giorgi <tedoradze2004@gmail.com>
+Date:   Wed Dec 4 09:20:25 2024 +0400
+
+    ara momushave versia
+
+[33mcommit 54772505a43de3cb565511eb4d9d5bd1b1e379f7[m
+Author: giorgi <tedoradze2004@gmail.com>
+Date:   Tue Dec 3 17:35:35 2024 +0400
+
+    rights
+
+[33mcommit aea2d46015aad2b79a544dbde35c093a8d004113[m
+Author: giorgi <tedoradze2004@gmail.com>
+Date:   Tue Nov 26 15:21:10 2024 +0400
+
+    starteris saxeli gamovaswore
+
+[33mcommit 3d0358d3be828c61f6670bd19a794f0d28715a60[m
+Author: Nika Beridze <rexoman65@gmail.com>
+Date:   Mon Nov 25 12:35:44 2024 +0400
+
+    small refactor
+
+[33mcommit 3bef859618f53998df33dd00421c04fb3ed0b22c[m
+Author: Nika Beridze <rexoman65@gmail.com>
+Date:   Mon Nov 25 12:33:48 2024 +0400
+
+    small refactor
+
+[33mcommit 022f7cc5f05bfe4c8d27882839e89cb10753c849[m
+Author: Nika Beridze <rexoman65@gmail.com>
+Date:   Mon Nov 25 12:17:07 2024 +0400
+
+    small refactor
+
+[33mcommit 6a83f23714188913280c094892cc78670f313b6e[m
+Author: Nika Beridze <rexoman65@gmail.com>
+Date:   Mon Nov 25 12:03:00 2024 +0400
+
+    add: Exception handlers;
+
+[33mcommit 68b4c9edf91d59616f0d322db226803777949107[m
+Author: Nika Beridze <rexoman65@gmail.com>
+Date:   Mon Nov 25 11:30:38 2024 +0400
+
+    refactor code
+
+[33mcommit a5be431d13d9b84393861d08f7d1639aaaaef5e1[m
+Author: giorgi <tedoradze2004@gmail.com>
+Date:   Sat Nov 23 23:17:27 2024 +0400
+
+    refaqtoringi kontrolelis gamartiveba
+
+[33mcommit f0b0f80485741670f40d2d4cea71a6bfc5687ae0[m
+Author: giorgi <tedoradze2004@gmail.com>
+Date:   Fri Nov 22 22:19:13 2024 +0400
+
+    refaqtoringi patara cvlilebebi da kodis usafrTxoebis gazrda
+
+[33mcommit 51a3513d6f94056bcc9406d93502c1d6257292d8[m
+Author: giorgi <tedoradze2004@gmail.com>
+Date:   Fri Nov 22 20:10:04 2024 +0400
+
+    jwt da spring seqiuriti
+
+[33mcommit 30b7b1c88987b31cb93d333f2258507e0b812280[m
+Author: giorgi <tedoradze2004@gmail.com>
+Date:   Thu Nov 7 17:45:02 2024 +0400
+
+    jwt sawyisi
+
+[33mcommit f2dc8851fba54a742c3195c66c90efe71780b20b[m
+Author: giorgi <tedoradze2004@gmail.com>
+Date:   Wed Nov 6 15:50:22 2024 +0400
+
+    demo momushave
+
+[33mcommit f62f7481c635b41f9dd0cbe8ba2aff55aca00f68[m
+Author: giorgi <tedoradze2004@gmail.com>
+Date:   Mon Nov 4 14:37:16 2024 +0400
+
+    demo1 aramomushave

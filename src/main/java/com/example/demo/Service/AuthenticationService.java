@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -112,20 +113,20 @@ public class AuthenticationService {
 
     public AuthenticationResponse login(LoginAuthenticationRequest request){
         String username = request.getUsername();
-        authenticationManager.authenticate(
+        Authentication authentication= authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         username,
                         request.getPassword()
                 )
         );
 
-        Optional<User> user = userService.findByUsername(username);
+        User user =(User) authentication.getPrincipal();
 
-        if (user.isEmpty()) {
+       /* if (user.isEmpty()) {
             throw new UsernameNotFoundException("User with this username does not exist");
-        }
-
-        return createAuthenticationResponse(new TokenAuthenticationData(user.get()));
+        }*/
+        //g
+        return createAuthenticationResponse(new TokenAuthenticationData(user));
     }
 
 
