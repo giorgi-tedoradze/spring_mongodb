@@ -2,6 +2,8 @@ package com.example.demo.controler;
 
 import com.example.demo.Service.AuthenticationService;
 import com.example.demo.Service.UserRegistrationInformation;
+import com.example.demo.microservices.ConnectEmailService;
+import com.example.demo.model.EmailMessage;
 import com.example.demo.token.TokenCreator;
 import com.example.demo.token.TokenDriver;
 import com.example.demo.token.TokenType;
@@ -25,6 +27,7 @@ public class TestController {
     private OptService optService;
     private AuthenticationService authenticationService;
     private UserRegistrationInformation userRegistrationInformation;
+    private ConnectEmailService connectEmailService;
 
     @GetMapping(value = "/role")
     public ResponseEntity<String> test(Principal principal) {
@@ -63,6 +66,17 @@ public class TestController {
     @GetMapping("/chash")
     public ResponseEntity<?> chash(@RequestParam String key) {
         return ResponseEntity.ok(userRegistrationInformation.getUserRegistrationInformation(key));
+    }
+
+    @GetMapping("/service/email")
+    public ResponseEntity<?> serviseEmail(@RequestBody EmailMessage email) {
+
+
+
+            connectEmailService.send(email);
+
+
+        return ResponseEntity.ok(email);
     }
    
 }

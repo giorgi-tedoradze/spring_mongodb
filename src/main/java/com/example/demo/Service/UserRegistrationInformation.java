@@ -32,7 +32,7 @@ public class UserRegistrationInformation {
     public RegistrationAuthenticationRequest getUserRegistrationInformation(String key) {
         RegistrationAuthenticationRequest value = this.userRegistrationInformation.get(key);
         if (value == null) {
-            logger.warn("გასაღები არა სწორი {}",key);
+            logger.warn("key {} is not found ",key);
             value = new RegistrationAuthenticationRequest("**", "**", "**");
         }
         return value;

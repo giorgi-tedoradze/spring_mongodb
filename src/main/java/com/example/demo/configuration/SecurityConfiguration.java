@@ -1,4 +1,4 @@
-package com.example.demo.security;
+package com.example.demo.configuration;
 
 import com.example.demo.database.service.UserService;
 import com.example.demo.filter.TokenRequestFilter;

@@ -63,10 +63,10 @@ public class TokenRequestFilter extends OncePerRequestFilter {
                     .map(SimpleGrantedAuthority::new)
                     .toList();*/ //მერე დააბრუნე
 
-            System.out.println("\naxa doFilterInternal session: username: username="+username);
+
 
             UserDetails userDetails = this.userService.loadUserByUsername(username);
-            System.out.println("\n\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n"+"doFilterInternal::doFilterInternal:"+userDetails.getAuthorities());
+
             UsernamePasswordAuthenticationToken authentication=
                     new UsernamePasswordAuthenticationToken(userDetails,
                             null,
@@ -77,7 +77,7 @@ public class TokenRequestFilter extends OncePerRequestFilter {
             );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            System.out.println("SecurityContextHolder.getContext().getAuthentication():"+SecurityContextHolder.getContext().getAuthentication());
+
 
             chain.doFilter(request,response);
             return;
@@ -106,10 +106,7 @@ public class TokenRequestFilter extends OncePerRequestFilter {
 
             SecurityContextHolder.getContext().setAuthentication(authToken);
 
-            if(userSession!=null) {
-                userSession.setUsername(username);
-                userSession.setRoles(tokenCreator.extractRolesToString(token));
-            }else{System.out.println("session is null ratom??");}
+
         }
 
         chain.doFilter(request, response);

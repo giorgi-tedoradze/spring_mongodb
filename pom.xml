@@ -68,6 +68,26 @@
             <version>2.0.13</version>
         </dependency>
 
+        <!-- Подключение RabbitMQ для работы с очередями сообщений -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+<!-- სურიალიზაცია ჯსონ ზე-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.15.2</version>
+        </dependency>
+
+
+        <!-- Зависимость клиента RabbitMQ для прямой работы с сервером сообщений -->
+        <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+            <version>5.18.0</version>
+        </dependency>
+
         <!-- Зависимость для Logback — популярная реализация SLF4J для логирования -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -81,6 +101,8 @@
             <artifactId>jjwt-jackson</artifactId>
             <version>0.11.2</version>
         </dependency>
+
+
 
         <!-- Зависимость для Spring Cache, если ваш проект будет использовать кэширование -->
         <dependency>
